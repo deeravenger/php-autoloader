@@ -1,9 +1,9 @@
 <?php
 /**
- * Script for generation array-map of php-classes for autoloading
+ * Script for generation array-map of php-classes for autoload
  *
  * Use:
- * php map.php --file=/path/to/map.php --dir=/path/to/dir/where/php/files
+ * php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files
  *
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
@@ -101,7 +101,8 @@ function getClassesFromFile( $fileName )
 	{
 		if ( is_array( $tokens[ $i ] ) )
 		{
-			switch ( $tokens[ $i ][ 0 ] )
+			list( $type, $value ) = $tokens[ $i ];
+			switch ( $type )
 			{
 				case T_CLASS:
 				case T_INTERFACE:
@@ -110,7 +111,7 @@ function getClassesFromFile( $fileName )
 				case T_STRING:
 					if ( $waitingClassName )
 					{
-						$result[ ] = $tokens[ $i ][ 1 ];
+						$result[ ] = $value;
 						$waitingClassName = false;
 					}
 					break;
@@ -132,7 +133,7 @@ function checkOptions( array $options )
 	}
 	if ( !array_key_exists( 'dir', $options ) )
 	{
-		$messages[ ] = 'Please specify dir for analize.' . "\n";
+		$messages[ ] = 'Please specify dir for analyze.' . "\n";
 	}
 	if ( !empty( $messages ) )
 	{
@@ -148,9 +149,9 @@ function help()
 	$messages[ ] = 'HELP';
 	$messages[ ] = '';
 	$messages[ ] = 'Example:';
-	$messages[ ] = 'php map.php --file=/www/project/autoloader_map.php --dir=/www/project/';
+	$messages[ ] = 'php map.php --file=/www/project/class_map.php --dir=/www/project/';
 	$messages[ ] = '';
-	$messages[ ] = 'Script will create file autoloader_map.php (if it possible) with array of all classes in dir /www/project';
+	$messages[ ] = 'Script will create file class_map.php (if it possible) with array of all classes in dir /www/project';
 	$messages[ ] = '';
 	$messages[ ] = 'Good luck!';
 
