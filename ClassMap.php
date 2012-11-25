@@ -92,6 +92,7 @@ class ClassMap
 
 	protected function _buildClassMap()
 	{
+		$this->_startProgress();
 		for ( $i = 0; $i < $this->_filesCount; $i++ )
 		{
 			$list = $this->_getClasses( $this->_files[ $i ] );
@@ -100,7 +101,9 @@ class ClassMap
 				$this->_classMap[ $className ] = $this->_files[ $i ];
 			}
 			$this->_classMapCount += count( $list );
+			$this->_showProgress( $i, $this->_filesCount );
 		}
+		$this->_stopProgress();
 //		ksort( $this->_classMap );
 	}
 
@@ -225,5 +228,69 @@ class ClassMap
 			}
 		}
 		return $this->_dir . ' (' . $status . ')';
+	}
+
+	private function _startProgress()
+	{
+		if ( $this->_verbose )
+		{
+			$this->_showRule();
+			echo "\n";
+		}
+		$this->_showProgress( 0, 0, true );
+	}
+
+	private function _stopProgress()
+	{
+		if ( $this->_verbose )
+		{
+			echo "\n";
+		}
+	}
+
+	private function _showRule()
+	{
+		if ( $this->_verbose )
+		{
+			$length = 50;
+			$hint = "100%";
+			$content = "[";
+			for ( $i = 0, $c = $length - strlen( $hint ); $i < $c; $i++ )
+			{
+				if ( $i == $c / 2 - strlen( $hint ) / 2 )
+				{
+					$content .= $hint;
+				}
+				else
+				{
+					$content .= "-";
+				}
+			}
+			$content .= "]";
+			echo $content;
+		}
+	}
+
+	private function _showProgress( $number, $limit, $clear = false )
+	{
+		static $state = 0;
+
+		if ( $this->_verbose )
+		{
+			if ( $clear )
+			{
+				$state = 0;
+				echo " ";
+			}
+			else
+			{
+				$percent = (int) ($number * 100 / $limit);
+				if ( $percent % 2 && $percent >= $state + 2 )
+				{
+					$state = $percent;
+					echo "=";
+				}
+			}
+		}
 	}
 }
