@@ -6,7 +6,7 @@ Script for generation map of php files
 
 Use
 -----
-php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files
+php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files --verbose --help
 
 
 Autoload
