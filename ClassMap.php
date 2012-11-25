@@ -175,13 +175,39 @@ class ClassMap
 
 	private function _getFileWithStatus()
 	{
-		$status = 'not found';
 		if ( file_exists( $this->_file ) )
 		{
-			$status = 'found';
-			if ( is_writable( $this->_file ) )
+			if ( is_file( $this->_file ) )
 			{
-				$status .= ', writable';
+				$status = 'found';
+				if ( is_writable( $this->_file ) )
+				{
+					$status .= ', writable';
+				}
+			}
+			else
+			{
+				$status = 'is dir, not file';
+			}
+		}
+		else
+		{
+			$status = 'not found';
+			$dir = dirname( $this->_file );
+			if ( !is_dir( $dir ) )
+			{
+				$status .= ', parent dir not found';
+			}
+			else
+			{
+				if ( is_writable( $dir ) )
+				{
+					$status .= ', parent dir writable';
+				}
+				else
+				{
+					$status .= ', parent dir writable';
+				}
 			}
 		}
 		return $this->_file . ' (' . $status . ')';
@@ -190,7 +216,7 @@ class ClassMap
 	private function _getDirWithStatus()
 	{
 		$status = 'not found';
-		if ( file_exists( $this->_dir ) )
+		if ( is_dir( $this->_dir ) )
 		{
 			$status = 'found';
 			if ( is_readable( $this->_dir ) )
