@@ -6,12 +6,12 @@ Script for generation map of php files
 
 Use
 -----
-php console.php --file=/path/to/map.php --dir=/path/to/dir/where/php/files
+php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files
 
 
 Autoload
 ---------
-For simple autoload edit file autoloader.php.
+For simple autoload edit file "autoload.php".
 After that put in your index.php
 
 ```php

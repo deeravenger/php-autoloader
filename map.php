@@ -3,7 +3,7 @@
  * Script for generation array-map of php-classes for autoloading
  *
  * Use:
- * php console.php --file=/path/to/map.php --dir=/path/to/dir/where/php/files
+ * php map.php --file=/path/to/map.php --dir=/path/to/dir/where/php/files
  *
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
