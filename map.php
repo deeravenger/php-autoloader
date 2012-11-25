@@ -27,18 +27,16 @@ $status = saveMap( $options[ 'file' ], $map );
 $messages = array();
 if ( !$status )
 {
-	$messages[] = 'ERROR!';
-	$messages[] = 'Can\'t save to file '. $options[ 'file' ];
+	$messages[ ] = 'ERROR!';
+	$messages[ ] = 'Can\'t save to file ' . $options[ 'file' ];
 }
 else
 {
-	$messages[] = 'SUCCESS!';
-	$messages[] = 'In directory ' . $options[ 'dir' ] . ' was found ' . count( $map ) . ' classes.';
-	$messages[] = 'This successfully saved to file ' . $options[ 'file' ];
+	$messages[ ] = 'SUCCESS!';
+	$messages[ ] = 'In directory ' . $options[ 'dir' ] . ' was found ' . count( $map ) . ' classes.';
+	$messages[ ] = 'This successfully saved to file ' . $options[ 'file' ];
 }
 showMessage( $messages );
-
-
 
 
 /**
@@ -52,7 +50,6 @@ function saveMap( $fileName, array $map )
 	return file_put_contents( $fileName, $content ) ? true : false;
 }
 
-
 /**
  * @param $dir
  * @return array
@@ -64,12 +61,13 @@ function getClassMap( $dir )
 	$fileList = fileList( $dir . '/*.php' );
 	foreach ( $fileList as $fileName )
 	{
-		$list = getClassessFromFile( $fileName );
+		$list = getClassesFromFile( $fileName );
 		foreach ( $list as $className )
 		{
 			$result[ $className ] = $fileName;
 		}
 	}
+	ksort( $result );
 
 	return $result;
 }
@@ -82,7 +80,7 @@ function getClassMap( $dir )
 function fileList( $pattern, $flags = 0 )
 {
 	$files = glob( $pattern, $flags );
-	foreach ( glob( dirname( $pattern ) . '/*', GLOB_ONLYDIR|GLOB_NOSORT ) as $dir )
+	foreach ( glob( dirname( $pattern ) . '/*', GLOB_ONLYDIR | GLOB_NOSORT ) as $dir )
 	{
 		$files = array_merge( $files, fileList( $dir . '/' . basename( $pattern ), $flags ) );
 	}
@@ -93,27 +91,48 @@ function fileList( $pattern, $flags = 0 )
  * @param $fileName
  * @return array
  */
-function getClassessFromFile( $fileName )
+function getClassesFromFile( $fileName )
 {
 	$result = array();
 	$content = file_get_contents( $fileName );
-	if ( preg_match_all( '/class\s+(\w+)/i', $content, $matches ) ) {
-		$result = $matches[ 1 ];
+	$tokens = token_get_all( $content );
+	$waitingClassName = false;
+	for ( $i = 0, $c = count( $tokens ); $i < $c; $i++ )
+	{
+		if ( is_array( $tokens[ $i ] ) )
+		{
+			switch ( $tokens[ $i ][ 0 ] )
+			{
+				case T_CLASS:
+				case T_INTERFACE:
+					$waitingClassName = true;
+					break;
+				case T_STRING:
+					if ( $waitingClassName )
+					{
+						$result[ ] = $tokens[ $i ][ 1 ];
+						$waitingClassName = false;
+					}
+					break;
+			}
+		}
 	}
 	return $result;
 }
 
-
+/**
+ * @param array $options
+ */
 function checkOptions( array $options )
 {
 	$messages = array();
 	if ( !array_key_exists( 'file', $options ) )
 	{
-		$messages[] = 'Please specify file for input data.' . "\n";
+		$messages[ ] = 'Please specify file for input data.' . "\n";
 	}
 	if ( !array_key_exists( 'dir', $options ) )
 	{
-		$messages[] = 'Please specify dir for analize.' . "\n";
+		$messages[ ] = 'Please specify dir for analize.' . "\n";
 	}
 	if ( !empty( $messages ) )
 	{
@@ -123,18 +142,17 @@ function checkOptions( array $options )
 	}
 }
 
-
 function help()
 {
 	$messages = array();
-	$messages[] = 'HELP';
-	$messages[] = '';
-	$messages[] = 'Example:';
-	$messages[] = 'php map.php --file=/www/project/autoloader_map.php --dir=/www/project/';
-	$messages[] = '';
-	$messages[] = 'Script will create file autoloader_map.php (if it possible) with array of all classes in dir /www/project';
-	$messages[] = '';
-	$messages[] = 'Good luck!';
+	$messages[ ] = 'HELP';
+	$messages[ ] = '';
+	$messages[ ] = 'Example:';
+	$messages[ ] = 'php map.php --file=/www/project/autoloader_map.php --dir=/www/project/';
+	$messages[ ] = '';
+	$messages[ ] = 'Script will create file autoloader_map.php (if it possible) with array of all classes in dir /www/project';
+	$messages[ ] = '';
+	$messages[ ] = 'Good luck!';
 
 	showMessage( $messages );
 }
