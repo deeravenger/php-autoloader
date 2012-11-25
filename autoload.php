@@ -1,6 +1,6 @@
 <?php
 
-$map = include 'path/to/your/map.php';
+$map = include 'path/to/your/class_map.php';
 
 function load_class_by_map( $className )
 {
