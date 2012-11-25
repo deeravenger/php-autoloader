@@ -117,7 +117,9 @@ function checkOptions( array $options )
 	}
 	if ( !empty( $messages ) )
 	{
-		showMessage( $messages );
+		array_unshift( $messages, 'ERROR!' );
+		showMessage( $messages, false );
+		help();
 	}
 }
 
@@ -125,7 +127,7 @@ function checkOptions( array $options )
 function help()
 {
 	$messages = array();
-	$messages[] = 'PHP MAP GENERATION CONSOLE';
+	$messages[] = 'HELP';
 	$messages[] = '';
 	$messages[] = 'Example:';
 	$messages[] = 'php map.php --file=/www/project/autoloader_map.php --dir=/www/project/';
