@@ -2,6 +2,15 @@
 include 'Log.php';
 include 'Progress.php';
 
+if ( !defined( 'T_ML_COMMENT' ) )
+{
+	define( 'T_ML_COMMENT', T_COMMENT );
+}
+else
+{
+	define( 'T_DOC_COMMENT', T_ML_COMMENT );
+}
+
 /**
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
@@ -62,8 +71,7 @@ class ClassMap
 
 	public function run()
 	{
-		$this->_log( "ClassMap: init with params:\nFILE: %s\nDIR: %s"
-			, $this->_getFileWithStatus(), $this->_getDirWithStatus() );
+		$this->_log( "ClassMap: init with params:\nFILE: %s\nDIR: %s", $this->_getFileWithStatus(), $this->_getDirWithStatus() );
 
 		$this->_log( "Start searching php files..." );
 		$this->_searchFiles();
@@ -151,26 +159,92 @@ class ClassMap
 	protected function _getClasses( $fileName )
 	{
 		$result = array();
-		$content = file_get_contents( $fileName );
+//		$content = file_get_contents( $fileName );
+		$content = $this->_getContentWithoutComments( $fileName );
 		$tokens = token_get_all( $content );
 		$waitingClassName = false;
+		$waitingNamespace = false;
+		$namespace = '';
+		$countWhitespace = 0;
 		for ( $i = 0, $c = count( $tokens ); $i < $c; $i++ )
 		{
 			if ( is_array( $tokens[ $i ] ) )
 			{
-				list( $type, $value ) = $tokens[ $i ];
-				switch ( $type )
+				list( $id, $value ) = $tokens[ $i ];
+				switch ( $id )
 				{
+					case T_NAMESPACE:
+						$waitingNamespace = true;
+						$namespace = '';
+						$countWhitespace = 0;
+						break;
 					case T_CLASS:
 					case T_INTERFACE:
+						$waitingNamespace = false;
 						$waitingClassName = true;
 						break;
 					case T_STRING:
-						if ( $waitingClassName )
+						if ( $waitingNamespace && $countWhitespace )
 						{
+							$namespace = $value;
+							$waitingNamespace = false;
+						}
+						elseif ( $waitingClassName )
+						{
+							if ( !empty( $namespace ) )
+							{
+								$value = sprintf( '%s/%s', $namespace, $value );
+							}
 							$result[ ] = $value;
 							$waitingClassName = false;
 						}
+						break;
+					case T_WHITESPACE:
+						if ( $waitingNamespace )
+						{
+							$countWhitespace++;
+							if ( $countWhitespace > 1 )
+							{
+								$waitingNamespace = false;
+								$countWhitespace = 0;
+							}
+						}
+						break;
+					default:
+						if ( $waitingNamespace && $id != T_WHITESPACE )
+						{
+							$waitingNamespace = false;
+						}
+				}
+//				var_dump( token_name( $type ) );
+			}
+		}
+		return $result;
+	}
+
+	protected function _getContentWithoutComments( $fileName )
+	{
+		$result = '';
+		$content = file_get_contents( $fileName );
+		$tokens = token_get_all( $content );
+		foreach ( $tokens as $token )
+		{
+			if ( is_string( $token ) )
+			{
+				$result .= $token;
+			}
+			else
+			{
+				// токен-массив
+				list( $id, $value ) = $token;
+				switch ( $id )
+				{
+					case T_COMMENT:
+					case T_ML_COMMENT:
+					case T_DOC_COMMENT:
+						break;
+					default:
+						$result .= $value;
 						break;
 				}
 			}
