@@ -8,9 +8,9 @@
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
-require_once dirname( __FILE__ ) . '/ClassMap.php';
-require_once dirname( __FILE__ ) . '/Log/Console.php';
-require_once dirname( __FILE__ ) . '/Progress/Console.php';
+require_once dirname( __FILE__ ) . '/classes/ClassMap.php';
+require_once dirname( __FILE__ ) . '/classes/Log/Console.php';
+require_once dirname( __FILE__ ) . '/classes/Progress/Console.php';
 
 $options = getopt( '', array( 'dir:', 'file:', 'verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
