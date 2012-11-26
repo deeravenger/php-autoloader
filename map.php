@@ -9,6 +9,8 @@
  * @url https://github.com/dmkuznetsov/php-class-map
  */
 require_once dirname( __FILE__ ) . '/ClassMap.php';
+require_once dirname( __FILE__ ) . '/Log/Console.php';
+require_once dirname( __FILE__ ) . '/Progress/Console.php';
 
 $options = getopt( '', array( 'dir:', 'file:', 'verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
@@ -23,10 +25,10 @@ if ( array_key_exists( 'verbose', $options ) )
 	$verbose = true;
 }
 
-$classMap = new ClassMap( $options[ 'file' ], $options[ 'dir' ], $verbose );
+$classMap = new ClassMap( $options[ 'file' ], $options[ 'dir' ], new Log_Console( $verbose ), new Progress_Console() );
 $classMap->run();
 
-
+exit( "\n" );
 
 /**
  * @param array $options

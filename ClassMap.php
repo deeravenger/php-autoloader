@@ -1,4 +1,7 @@
 <?php
+include 'Log.php';
+include 'Progress.php';
+
 /**
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
@@ -14,9 +17,13 @@ class ClassMap
 	 */
 	protected $_dir;
 	/**
-	 * @var bool
+	 * @var Log
 	 */
-	protected $_verbose = false;
+	protected $_log;
+	/**
+	 * @var Progress
+	 */
+	protected $_progress;
 
 	/**
 	 * @var array
@@ -42,13 +49,15 @@ class ClassMap
 	/**
 	 * @param string $file
 	 * @param string $dir
-	 * @param bool $verbose
+	 * @param Log $log
+	 * @param Progress $progress
 	 */
-	public function __construct( $file, $dir, $verbose = false )
+	public function __construct( $file, $dir, Log $log = null, Progress $progress = null )
 	{
 		$this->_file = $file;
 		$this->_dir = rtrim( $dir, '/' );
-		$this->_verbose = $verbose ? true : false;
+		$this->_log = $log;
+		$this->_progress = $progress;
 	}
 
 	public function run()
@@ -86,13 +95,16 @@ class ClassMap
 
 	protected function _searchFiles()
 	{
+		$this->_progress( 'start' );
 		$this->_files = $this->_getFileList( $this->_dir . '/*.php' );
+		$this->_progress( 'stop' );
+
 		$this->_filesCount = count( $this->_files );
 	}
 
 	protected function _buildClassMap()
 	{
-		$this->_startProgress();
+		$this->_progress( 'start', $this->_filesCount );
 		for ( $i = 0; $i < $this->_filesCount; $i++ )
 		{
 			$list = $this->_getClasses( $this->_files[ $i ] );
@@ -101,9 +113,9 @@ class ClassMap
 				$this->_classMap[ $className ] = $this->_files[ $i ];
 			}
 			$this->_classMapCount += count( $list );
-			$this->_showProgress( $i, $this->_filesCount );
+			$this->_progress( 'update', $i );
 		}
-		$this->_stopProgress();
+		$this->_progress( 'stop' );
 //		ksort( $this->_classMap );
 	}
 
@@ -127,6 +139,7 @@ class ClassMap
 		foreach ( glob( dirname( $pattern ) . '/*', GLOB_ONLYDIR | GLOB_NOSORT ) as $dir )
 		{
 			$files = array_merge( $files, $this->_getFileList( $dir . '/' . basename( $pattern ), $flags ) );
+			$this->_progress( 'update' );
 		}
 		return $files;
 	}
@@ -167,12 +180,19 @@ class ClassMap
 
 	protected function _log()
 	{
-		$date = date( 'H:i:s' );
-		$message = $date . ' ' . call_user_func_array( 'sprintf', func_get_args() );
-		$this->_messages[] = $message;
-		if ( $this->_verbose )
+		if ( !is_null( $this->_log ) )
 		{
-			echo $message . "\n";
+			call_user_func_array( array( $this->_log, 'log' ), func_get_args() );
+		}
+	}
+
+	protected function _progress()
+	{
+		$args = func_get_args();
+		$method = array_shift( $args );
+		if ( !is_null( $this->_progress ) )
+		{
+			call_user_func_array( array( $this->_progress, $method ), $args );
 		}
 	}
 
@@ -228,69 +248,5 @@ class ClassMap
 			}
 		}
 		return $this->_dir . ' (' . $status . ')';
-	}
-
-	private function _startProgress()
-	{
-		if ( $this->_verbose )
-		{
-			$this->_showRule();
-			echo "\n";
-		}
-		$this->_showProgress( 0, 0, true );
-	}
-
-	private function _stopProgress()
-	{
-		if ( $this->_verbose )
-		{
-			echo "\n";
-		}
-	}
-
-	private function _showRule()
-	{
-		if ( $this->_verbose )
-		{
-			$length = 50;
-			$hint = "100%";
-			$content = "[";
-			for ( $i = 0, $c = $length - strlen( $hint ); $i < $c; $i++ )
-			{
-				if ( $i == $c / 2 - strlen( $hint ) / 2 )
-				{
-					$content .= $hint;
-				}
-				else
-				{
-					$content .= "-";
-				}
-			}
-			$content .= "]";
-			echo $content;
-		}
-	}
-
-	private function _showProgress( $number, $limit, $clear = false )
-	{
-		static $state = 0;
-
-		if ( $this->_verbose )
-		{
-			if ( $clear )
-			{
-				$state = 0;
-				echo " ";
-			}
-			else
-			{
-				$percent = (int) ($number * 100 / $limit);
-				if ( $percent % 2 && $percent >= $state + 2 )
-				{
-					$state = $percent;
-					echo "=";
-				}
-			}
-		}
 	}
 }
