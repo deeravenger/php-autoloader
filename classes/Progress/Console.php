@@ -5,10 +5,11 @@ class Progress_Console extends Progress
 	private $_status = false;
 	private $_count;
 	private $_state = 0;
+	const MIN_FOR_RULE = 25;
 
 	public function start( $count = null )
 	{
-		if ( !is_null( $count ) )
+		if ( !is_null( $count ) && $count >= self::MIN_FOR_RULE )
 		{
 			$this->_showRule();
 		}
@@ -48,11 +49,14 @@ class Progress_Console extends Progress
 
 	private function _updateLimited( $number )
 	{
-		$percent = (int) ($number * 100 / $this->_count );
-		if ( $percent % 2 && $percent >= $this->_state + 2 )
+		if ( $this->_count >= self::MIN_FOR_RULE )
 		{
-			$this->_state = $percent;
-			echo "=";
+			$percent = (int) ($number * 100 / $this->_count );
+			if ( $percent % 2 && $percent >= $this->_state + 2 )
+			{
+				$this->_state = $percent;
+				echo "=";
+			}
 		}
 	}
 

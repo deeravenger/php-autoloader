@@ -159,13 +159,11 @@ class ClassMap
 	protected function _getClasses( $fileName )
 	{
 		$result = array();
-//		$content = file_get_contents( $fileName );
-		$content = $this->_getContentWithoutComments( $fileName );
+		$content = file_get_contents( $fileName );
 		$tokens = token_get_all( $content );
 		$waitingClassName = false;
 		$waitingNamespace = false;
 		$namespace = '';
-		$countWhitespace = 0;
 		for ( $i = 0, $c = count( $tokens ); $i < $c; $i++ )
 		{
 			if ( is_array( $tokens[ $i ] ) )
@@ -176,15 +174,13 @@ class ClassMap
 					case T_NAMESPACE:
 						$waitingNamespace = true;
 						$namespace = '';
-						$countWhitespace = 0;
 						break;
 					case T_CLASS:
 					case T_INTERFACE:
-						$waitingNamespace = false;
 						$waitingClassName = true;
 						break;
 					case T_STRING:
-						if ( $waitingNamespace && $countWhitespace )
+						if ( $waitingNamespace )
 						{
 							$namespace = $value;
 							$waitingNamespace = false;
@@ -199,53 +195,13 @@ class ClassMap
 							$waitingClassName = false;
 						}
 						break;
-					case T_WHITESPACE:
-						if ( $waitingNamespace )
-						{
-							$countWhitespace++;
-							if ( $countWhitespace > 1 )
-							{
-								$waitingNamespace = false;
-								$countWhitespace = 0;
-							}
-						}
-						break;
-					default:
-						if ( $waitingNamespace && $id != T_WHITESPACE )
-						{
-							$waitingNamespace = false;
-						}
 				}
-//				var_dump( token_name( $type ) );
-			}
-		}
-		return $result;
-	}
-
-	protected function _getContentWithoutComments( $fileName )
-	{
-		$result = '';
-		$content = file_get_contents( $fileName );
-		$tokens = token_get_all( $content );
-		foreach ( $tokens as $token )
-		{
-			if ( is_string( $token ) )
-			{
-				$result .= $token;
 			}
 			else
 			{
-				// токен-массив
-				list( $id, $value ) = $token;
-				switch ( $id )
+				if ( $waitingNamespace && $tokens[ $i ] == '{' )
 				{
-					case T_COMMENT:
-					case T_ML_COMMENT:
-					case T_DOC_COMMENT:
-						break;
-					default:
-						$result .= $value;
-						break;
+					$waitingNamespace = false;
 				}
 			}
 		}
