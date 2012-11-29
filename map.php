@@ -1,10 +1,7 @@
 <?php
 /**
- * Script for generation array-map of php-classes for autoload
- *
- * Use:
- * php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files
- *
+ * Usage:
+ * php map.php --help
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
@@ -54,16 +51,8 @@ function checkOptions( array $options )
 
 function help()
 {
-	$messages = array();
-	$messages[ ] = 'CLASS-MAP HELP';
-	$messages[ ] = '';
-	$messages[ ] = 'Example:';
-	$messages[ ] = 'php map.php --file=/www/project/class_map.php --dir=/www/project/';
-	$messages[ ] = 'Script will create file class_map.php (if it possible) with array of all classes in dir /www/project';
-	$messages[ ] = '';
-	$messages[ ] = 'For verbose mode use option --verbose';
-
-	showMessage( $messages );
+	$content = file_get_contents( dirname( __FILE__ ) . '/README.md' );
+	showMessage( $content );
 }
 
 function showMessage( $message, $stop = true )

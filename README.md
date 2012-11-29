@@ -1,12 +1,10 @@
 PHP CLASS MAP
 =============
 Script for generation map of php files.
-
 Support PHP 5.3 (namespace required).
 
-
-How to use
-----------
+USAGE
+-------------
 php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files --verbose --help
 
 
