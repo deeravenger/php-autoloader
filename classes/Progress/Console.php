@@ -1,5 +1,9 @@
 <?php
-
+require dirname( __FILE__ ) . '/../Progress.php';
+/**
+ * @author Dmitry Kuznetsov 2012
+ * @url https://github.com/dmkuznetsov/php-class-map
+ */
 class Progress_Console extends Progress
 {
 	private $_status = false;

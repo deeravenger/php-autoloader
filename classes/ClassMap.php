@@ -1,7 +1,4 @@
 <?php
-include 'Log.php';
-include 'Progress.php';
-
 if ( !defined( 'T_ML_COMMENT' ) )
 {
 	define( 'T_ML_COMMENT', T_COMMENT );
@@ -20,10 +17,6 @@ class ClassMap
 	/**
 	 * @var string
 	 */
-	protected $_file;
-	/**
-	 * @var string
-	 */
 	protected $_dir;
 	/**
 	 * @var Log
@@ -34,10 +27,6 @@ class ClassMap
 	 */
 	protected $_progress;
 
-	/**
-	 * @var array
-	 */
-	private $_messages = array();
 	/**
 	 * @var array
 	 */
@@ -56,14 +45,12 @@ class ClassMap
 	private $_classMapCount = 0;
 
 	/**
-	 * @param string $file
 	 * @param string $dir
 	 * @param Log $log
 	 * @param Progress $progress
 	 */
-	public function __construct( $file, $dir, Log $log = null, Progress $progress = null )
+	public function __construct( $dir, Log $log, Progress $progress )
 	{
-		$this->_file = $file;
 		$this->_dir = rtrim( $dir, '/' );
 		$this->_log = $log;
 		$this->_progress = $progress;
@@ -71,48 +58,37 @@ class ClassMap
 
 	public function run()
 	{
-		$this->_log( "ClassMap: init with params:\nFILE: %s\nDIR: %s", $this->_getFileWithStatus(), $this->_getDirWithStatus() );
+		$this->_log->log( "ClassMap: init with params:\nDIR: %s", $this->_getDirWithStatus() );
 
-		$this->_log( "Start searching php files..." );
+		$this->_log->log( "Start searching php files..." );
 		$this->_searchFiles();
-		$this->_log( "Found %d php-files", $this->_filesCount );
+		$this->_log->log( "Found %d php-files", $this->_filesCount );
 
-		$this->_log( "Start analyzing files for classes..." );
+		$this->_log->log( "Start analyzing files for classes..." );
 		$this->_buildClassMap();
-		$this->_log( "Found %d classes", $this->_classMapCount );
-
-		$this->_log( "Start writing class map to file..." );
-		$success = $this->_save();
-		if ( $success )
-		{
-			$this->_log( "Success! Please, check file %s", $this->_file );
-		}
-		else
-		{
-			$this->_log( "Error! Can't write to file %s", $this->_file );
-		}
+		$this->_log->log( "Found %d classes", $this->_classMapCount );
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getLog()
+	public function getMap()
 	{
-		return $this->_messages;
+		return $this->_classMap;
 	}
 
 	protected function _searchFiles()
 	{
-		$this->_progress( 'start' );
+		$this->_progress->start();
 		$this->_files = $this->_getFileList( $this->_dir . '/*.php' );
-		$this->_progress( 'stop' );
+		$this->_progress->stop();
 
 		$this->_filesCount = count( $this->_files );
 	}
 
 	protected function _buildClassMap()
 	{
-		$this->_progress( 'start', $this->_filesCount );
+		$this->_progress->start( $this->_filesCount );
 		for ( $i = 0; $i < $this->_filesCount; $i++ )
 		{
 			$list = $this->_getClasses( $this->_files[ $i ] );
@@ -121,19 +97,10 @@ class ClassMap
 				$this->_classMap[ $className ] = $this->_files[ $i ];
 			}
 			$this->_classMapCount += count( $list );
-			$this->_progress( 'update', $i );
+			$this->_progress->update( $i );
 		}
-		$this->_progress( 'stop' );
+		$this->_progress->stop();
 //		ksort( $this->_classMap );
-	}
-
-	/**
-	 * @return int
-	 */
-	protected function _save()
-	{
-		$content = '<?php return ' . var_export( $this->_classMap, true ) . ';';
-		return file_put_contents( $this->_file, $content );
 	}
 
 	/**
@@ -147,7 +114,7 @@ class ClassMap
 		foreach ( glob( dirname( $pattern ) . '/*', GLOB_ONLYDIR | GLOB_NOSORT ) as $dir )
 		{
 			$files = array_merge( $files, $this->_getFileList( $dir . '/' . basename( $pattern ), $flags ) );
-			$this->_progress( 'update' );
+			$this->_progress->update();
 		}
 		return $files;
 	}
@@ -206,64 +173,6 @@ class ClassMap
 			}
 		}
 		return $result;
-	}
-
-	protected function _log()
-	{
-		if ( !is_null( $this->_log ) )
-		{
-			call_user_func_array( array( $this->_log, 'log' ), func_get_args() );
-		}
-	}
-
-	protected function _progress()
-	{
-		$args = func_get_args();
-		$method = array_shift( $args );
-		if ( !is_null( $this->_progress ) )
-		{
-			call_user_func_array( array( $this->_progress, $method ), $args );
-		}
-	}
-
-	private function _getFileWithStatus()
-	{
-		if ( file_exists( $this->_file ) )
-		{
-			if ( is_file( $this->_file ) )
-			{
-				$status = 'found';
-				if ( is_writable( $this->_file ) )
-				{
-					$status .= ', writable';
-				}
-			}
-			else
-			{
-				$status = 'is dir, not file';
-			}
-		}
-		else
-		{
-			$status = 'not found';
-			$dir = dirname( $this->_file );
-			if ( !is_dir( $dir ) )
-			{
-				$status .= ', parent dir not found';
-			}
-			else
-			{
-				if ( is_writable( $dir ) )
-				{
-					$status .= ', parent dir writable';
-				}
-				else
-				{
-					$status .= ', parent dir writable';
-				}
-			}
-		}
-		return $this->_file . ' (' . $status . ')';
 	}
 
 	private function _getDirWithStatus()
