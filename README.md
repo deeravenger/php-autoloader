@@ -5,15 +5,14 @@ Support PHP 5.3 (namespace required).
 
 USAGE
 -------------
-php map.php --file=/path/to/class_map.php --dir=/path/to/dir/where/php/files --verbose --help
+php map.php --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files --verbose --help
 
 
 Autoload
 ---------
-For simple autoload edit file "autoload.php".
-After that put in your index.php
+After generation put in your index.php
 
 ```php
 <?php
-include 'autoload.php';
+include '/path/to/file_for_autoload.php';
 ```
