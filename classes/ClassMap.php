@@ -54,6 +54,14 @@ class ClassMap
 		$this->_dir = rtrim( $dir, '/' );
 		$this->_log = $log;
 		$this->_progress = $progress;
+		if ( is_null( $log ) )
+		{
+			$this->_log = ClassMap_Log::get();
+		}
+		if ( is_null( $progress ) )
+		{
+			$this->_progress = new ClassMap_Progress_None();
+		}
 	}
 
 	public function run()

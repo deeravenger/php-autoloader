@@ -3,13 +3,8 @@
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
-abstract class ClassMap_Log
+class ClassMap_Log_None extends ClassMap_Log
 {
-	/**
-	 * @var bool
-	 */
-	protected $_verboseMode;
-
 	/**
 	 * (PHP 4, PHP 5)<br/>
 	 * Return a formatted string
@@ -36,31 +31,7 @@ abstract class ClassMap_Log
 	 * @return string a string produced according to the formatting string
 	 * format.
 	 */
-	abstract public function log();
-
-	/**
-	 * @param string $name
-	 * @throws Exception
-	 * @return self
-	 */
-	public static function get( $name = 'None' )
+	public function log()
 	{
-		$files = glob( dirname( __FILE__ ) . '/Log/*.php' );
-		foreach ( $files as $filePath )
-		{
-			$fileName = pathinfo( $filePath, PATHINFO_FILENAME );
-			if ( strcasecmp( $name, $fileName ) == 0 )
-			{
-				$className = sprintf( 'ClassMap_Log_%s', $name );
-				require $filePath;
-				return new $className();
-			}
-		}
-		throw new Exception( 'Not found ClassMap_Log_' . $name );
-	}
-
-	public function setVerbose( $verbose )
-	{
-		$this->_verboseMode = $verbose ? true : false;
 	}
 }

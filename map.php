@@ -7,8 +7,8 @@
  */
 require_once dirname( __FILE__ ) . '/classes/ClassMap.php';
 require_once dirname( __FILE__ ) . '/classes/Writer.php';
-require_once dirname( __FILE__ ) . '/classes/Log/Console.php';
-require_once dirname( __FILE__ ) . '/classes/Progress/Console.php';
+require_once dirname( __FILE__ ) . '/classes/Log.php';
+require_once dirname( __FILE__ ) . '/classes/Progress.php';
 
 $options = getopt( '', array( 'dir:', 'file:', 'verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
@@ -23,12 +23,13 @@ if ( array_key_exists( 'verbose', $options ) )
 	$verbose = true;
 }
 
-$log = new Log_Console( $verbose );
+$log = ClassMap_Log::get( 'Console' );
+$log->setVerbose( $verbose );
 
-$classMap = new ClassMap( $options[ 'dir' ], $log, new Progress_Console() );
+$classMap = new ClassMap( $options[ 'dir' ], $log, ClassMap_Progress::get( 'Console' ) );
 $classMap->run();
 
-$writer = new Writer( $classMap->getMap(), $log );
+$writer = new ClassMap_Writer( $classMap->getMap(), $log );
 $writer->save( $options[ 'file' ] );
 
 exit( "\n" );
