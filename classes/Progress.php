@@ -3,7 +3,7 @@
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
-class Progress
+class ClassMap_Progress
 {
 	const START = 'start';
 	const UPDATE = 'update';

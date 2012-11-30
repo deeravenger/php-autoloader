@@ -19,11 +19,11 @@ class ClassMap
 	 */
 	protected $_dir;
 	/**
-	 * @var Log
+	 * @var ClassMap_Log
 	 */
 	protected $_log;
 	/**
-	 * @var Progress
+	 * @var ClassMap_Progress
 	 */
 	protected $_progress;
 
@@ -46,10 +46,10 @@ class ClassMap
 
 	/**
 	 * @param string $dir
-	 * @param Log $log
-	 * @param Progress $progress
+	 * @param ClassMap_Log $log
+	 * @param ClassMap_Progress $progress
 	 */
-	public function __construct( $dir, Log $log, Progress $progress )
+	public function __construct( $dir, ClassMap_Log $log = null, ClassMap_Progress $progress = null )
 	{
 		$this->_dir = rtrim( $dir, '/' );
 		$this->_log = $log;

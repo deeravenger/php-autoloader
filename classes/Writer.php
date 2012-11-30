@@ -3,18 +3,18 @@
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
-class Writer
+class ClassMap_Writer
 {
 	/**
 	 * @var array
 	 */
 	protected $_map;
 	/**
-	 * @var Log
+	 * @var ClassMap_Log
 	 */
 	protected $_log;
 
-	public function __construct( array $map, Log $log )
+	public function __construct( array $map, ClassMap_Log $log )
 	{
 		$this->_map = $map;
 		$this->_log = $log;

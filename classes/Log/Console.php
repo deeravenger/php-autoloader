@@ -4,7 +4,7 @@ require dirname( __FILE__ ) . '/../Log.php';
  * @author Dmitry Kuznetsov 2012
  * @url https://github.com/dmkuznetsov/php-class-map
  */
-class Log_Console extends Log
+class ClassMap_Log_Console extends ClassMap_Log
 {
 	protected $_verboseMode;
 	private $_data = array();
