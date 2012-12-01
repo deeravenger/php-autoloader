@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright (c) 2012, Dmitry Kuznetsov <dev.kuznetsov@gmail.com>. All rights reserved.
- * @author Dmitry Kuznetsov <dev.kuznetsov@gmail.com>
+ * @copyright (c) 2012, Dmitry Kuznetsov <kuznetsov2d@gmail.com>. All rights reserved.
+ * @author Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @url https://github.com/dmkuznetsov/php-class-map
 */
 class ClassMap_Log_None extends ClassMap_Log

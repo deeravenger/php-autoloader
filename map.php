@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @copyright (c) 2012, Dmitry Kuznetsov <dev.kuznetsov@gmail.com>. All rights reserved.
- * @author Dmitry Kuznetsov <dev.kuznetsov@gmail.com>
+ * @copyright (c) 2012, Dmitry Kuznetsov <kuznetsov2d@gmail.com>. All rights reserved.
+ * @author Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @url https://github.com/dmkuznetsov/php-class-map
 */
 require_once dirname( __FILE__ ) . '/classes/ClassMap.php';
@@ -72,7 +72,17 @@ function checkOptions( array $options )
 
 function help()
 {
-	$content = file_get_contents( dirname( __FILE__ ) . '/README.md' );
+	$content = array();
+	$content[] = 'PHP CLASS MAP';
+	$content[] = 'Script for generation map of php files. Support PHP 5.3 (namespace required).';
+	$content[] = 'USAGE';
+	$content[] = 'If you use phar file write "php map.phar"';
+	$content[] = 'If you use php file write "php map.php"';
+	$content[] = 'AVAILABLE OPTIONS';
+	$content[] = '--file="path/to/your/autoloader.php"';
+	$content[] = '--dir="path/to/your/php/classes"';
+	$content[] = '--verbose';
+	$content[] = '--help';
 	showMessage( $content );
 }
 
