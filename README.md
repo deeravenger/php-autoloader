@@ -1,5 +1,5 @@
-PHP CLASS MAP [en]
-==================
+PHP CLASS MAP AUTOLOADER [en]
+=============================
 Script for generating autoloader based on the map of classes in your project.
 Support PHP 5.3 (namespace required).
 
@@ -19,8 +19,8 @@ include '/path/to/file_for_autoload.php';
 
 
 
-PHP CLASS MAP [ru]
-==================
+PHP CLASS MAP AUTOLOADER [ru]
+=============================
 Скрипт для генерации автозагрузчика на основании карты классов вашего проекта.
 Поддерживает версию PHP 5.3 (включая namespace).
 
