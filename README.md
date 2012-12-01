@@ -8,7 +8,7 @@ USAGE
 Just download [map.phar](https://github.com/downloads/dmkuznetsov/php-class-map/map.phar) (from downloads)
 and run next command in terminal:
 
-`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files --verbose`
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files`
 
 Script will create file "/path/to/file_for_autoload.php" with autoloader. Just include this in your project:
 
@@ -29,7 +29,7 @@ PHP CLASS MAP [ru]
 Скачайте [map.phar](https://github.com/downloads/dmkuznetsov/php-class-map/map.phar) (из раздела downloads)
 и выполните команду в консоли:
 
-`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files --verbose`
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file`
 
 Скрипт создаст файл "/path/to/file_for_autoload.php" (если это возможно) с автозагрузчиком. Просто подключите его в вашем проекте:
 
