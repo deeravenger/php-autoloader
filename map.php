@@ -28,17 +28,17 @@ require_once dirname( __FILE__ ) . '/classes/Progress.php';
 require_once dirname( __FILE__ ) . '/classes/Progress/None.php';
 require_once dirname( __FILE__ ) . '/classes/Progress/Console.php';
 
-$options = getopt( '', array( 'dir:', 'file:', 'verbose', 'help' ) );
+$options = getopt( '', array( 'dir:', 'file:', 'no-verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
 {
 	help();
 }
 checkOptions( $options );
 
-$verbose = false;
-if ( array_key_exists( 'verbose', $options ) )
+$verbose = true;
+if ( array_key_exists( 'no-verbose', $options ) )
 {
-	$verbose = true;
+	$verbose = false;
 }
 
 $log = new ClassMap_Log_Console( $verbose );
@@ -89,7 +89,7 @@ function help()
 	$content[] = 'AVAILABLE OPTIONS';
 	$content[] = '--file="path/to/your/autoloader.php"';
 	$content[] = '--dir="path/to/your/php/classes"';
-	$content[] = '--verbose';
+	$content[] = '--no-verbose';
 	$content[] = '--help';
 	showMessage( $content );
 }
