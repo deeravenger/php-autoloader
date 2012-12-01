@@ -17,7 +17,6 @@ Script will create file "/path/to/file_for_autoload.php" with autoloader. Just i
 include '/path/to/file_for_autoload.php';
 ```
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 PHP CLASS MAP [ru]
