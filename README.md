@@ -1,23 +1,23 @@
 PHP CLASS MAP [en]
 ==================
-Script for generation map of php files.
+Script for generating autoloader based on the map of classes in your project.
 Support PHP 5.3 (namespace required).
 
 USAGE
 -------------
-php map.php --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files --verbose
+Just download [map.phar](https://github.com/downloads/dmkuznetsov/php-class-map/map.phar) (from downloads)
+and run next command in terminal:
 
-OR you can use "map.phar" from downloads.
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files --verbose`
 
-
-Autoload
----------
-After generation put in your index.php
+Script will create file "/path/to/file_for_autoload.php" with autoloader. Just include this in your project:
 
 ```php
 <?php
 include '/path/to/file_for_autoload.php';
 ```
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 PHP CLASS MAP [ru]
