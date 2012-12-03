@@ -91,6 +91,9 @@ function help()
 	$content[] = '--dir="path/to/your/php/classes"';
 	$content[] = '--no-verbose';
 	$content[] = '--help';
+	$content[] = '';
+	$content[] = 'Dmitry Kuznetsov <kuznetsov2d@gmail.com>, 2012';
+	$content[] = 'https://github.com/dmkuznetsov/php-class-map';
 	showMessage( $content );
 }
 
