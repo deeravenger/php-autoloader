@@ -1,6 +1,5 @@
 .DS_Store
 .idea
 test
-map.phar
 tests
 tests/test.php
