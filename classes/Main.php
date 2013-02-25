@@ -2,23 +2,11 @@
 /**
  * ClassMap
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright (c) 2012, Dmitry Kuznetsov <kuznetsov2d@gmail.com>. All rights reserved.
- * @author Dmitry Kuznetsov <kuznetsov2d@gmail.com>
- * @url https://github.com/dmkuznetsov/php-class-map
-*/
+ * @link      http://github.com/dmkuznetsov/php-class-map
+ * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com> (http://dmkuznetsov.com)
+ * @license   http://raw.github.com/dmkuznetsov/php-class-map/master/LICENSE.txt New BSD License
+ */
+namespace ClassMap;
 
 if ( !defined( 'T_ML_COMMENT' ) )
 {
@@ -29,20 +17,24 @@ else
 	define( 'T_DOC_COMMENT', T_ML_COMMENT );
 }
 
-class ClassMap
+class Main
 {
 	/**
 	 * @var string
 	 */
 	protected $_dir;
 	/**
-	 * @var ClassMap_Log
+	 * @var string
+	 */
+	protected $_filePath;
+	/**
+	 * @var bool
+	 */
+	protected $_relativePaths = true;
+	/**
+	 * @var \ClassMap\Log
 	 */
 	protected $_log;
-	/**
-	 * @var ClassMap_Progress
-	 */
-	protected $_progress;
 
 	/**
 	 * @var array
@@ -62,29 +54,21 @@ class ClassMap
 	private $_classMapCount = 0;
 
 	/**
-	 * @param string $dir
-	 * @param ClassMap_Log $log
-	 * @param ClassMap_Progress $progress
+	 * @param string $file file with autoloader
+	 * @param string $dir where search classes
+	 * @param string $relative relative paths
+	 * @param \ClassMap\LogInterface $log
 	 */
-	public function __construct( $dir, ClassMap_Log $log = null, ClassMap_Progress $progress = null )
+	public function __construct( $file, $dir, $relative, LogInterface $log )
 	{
+		$this->_filePath = $file;
 		$this->_dir = rtrim( $dir, '/' );
 		$this->_log = $log;
-		$this->_progress = $progress;
-		if ( is_null( $log ) )
-		{
-			$this->_log = ClassMap_Log::get();
-		}
-		if ( is_null( $progress ) )
-		{
-			$this->_progress = new ClassMap_Progress_None();
-		}
+		$this->_relativePaths = $relative;
 	}
 
 	public function run()
 	{
-		$this->_log->log( "ClassMap: init with params:\nDIR: %s", $this->_getDirWithStatus() );
-
 		$this->_log->log( "Start searching php files..." );
 		$this->_searchFiles();
 		$this->_log->log( "Found %d php-files", $this->_filesCount );
@@ -102,29 +86,56 @@ class ClassMap
 		return $this->_classMap;
 	}
 
+	public function save( $file = '' )
+	{
+		if ( empty( $file ) )
+		{
+			$file = $this->_filePath;
+		}
+		$this->_log->log( "Start writing class map to file..." );
+		if ( $this->_relativePaths )
+		{
+			$this->_log->log( "Use relative paths" );
+		}
+		$success = $this->_writeToFile( $file );
+		if ( $success )
+		{
+			$this->_log->log( "Success! Please, check file %s", $file );
+		}
+		else
+		{
+			$this->_log->log( "Error! Can't write to file %s", $file );
+		}
+	}
+
 	protected function _searchFiles()
 	{
-		$this->_progress->start();
+		$this->_log->startProgress();
 		$this->_files = $this->_getFileList( $this->_dir . '/*.php' );
-		$this->_progress->stop();
+		$this->_log->stopProgress();
 
 		$this->_filesCount = count( $this->_files );
 	}
 
 	protected function _buildClassMap()
 	{
-		$this->_progress->start( $this->_filesCount );
+		$this->_log->startProgress( $this->_filesCount );
 		for ( $i = 0; $i < $this->_filesCount; $i++ )
 		{
 			$list = $this->_getClasses( $this->_files[ $i ] );
+			$path = $this->_files[ $i ];
+			if ( $this->_relativePaths )
+			{
+				$path = $this->_getRelativePath( $this->_filePath, $this->_files[ $i ] );
+			}
 			foreach ( $list as $className )
 			{
-				$this->_classMap[ $className ] = $this->_files[ $i ];
+				$this->_classMap[ $className ] = $path;
 			}
 			$this->_classMapCount += count( $list );
-			$this->_progress->update( $i );
+			$this->_log->updateProgress( $i );
 		}
-		$this->_progress->stop();
+		$this->_log->stopProgress();
 //		ksort( $this->_classMap );
 	}
 
@@ -139,7 +150,7 @@ class ClassMap
 		foreach ( glob( dirname( $pattern ) . '/*', GLOB_ONLYDIR | GLOB_NOSORT ) as $dir )
 		{
 			$files = array_merge( $files, $this->_getFileList( $dir . '/' . basename( $pattern ), $flags ) );
-			$this->_progress->update();
+			$this->_log->updateProgress();
 		}
 		return $files;
 	}
@@ -200,17 +211,43 @@ class ClassMap
 		return $result;
 	}
 
-	private function _getDirWithStatus()
+	protected function _writeToFile( $file )
 	{
-		$status = 'not found';
-		if ( is_dir( $this->_dir ) )
+		$content = file_get_contents( dirname( __FILE__ ) . '/../autoload.php' );
+		$content = str_replace( 'array()', var_export( $this->_classMap, true ), $content );
+		$bytes = file_put_contents( $file, $content );
+		return $bytes ? true : false;
+	}
+
+	protected function _getRelativePath( $autoloader, $file )
+	{
+		$file1PathParts = explode( DIRECTORY_SEPARATOR, $autoloader );
+		$file2PathParts = explode( DIRECTORY_SEPARATOR, $file );
+		$countSameParts = 0;
+		for ( $i = 0, $c = count( $file1PathParts ); $i < $c; $i++ )
 		{
-			$status = 'found';
-			if ( is_readable( $this->_dir ) )
+			if ( isset( $file1PathParts[ $i ], $file2PathParts[ $i ] ) )
 			{
-				$status .= ', readable';
+				if ( $file1PathParts[ $i ] == $file2PathParts[ $i ] )
+				{
+					$countSameParts++;
+				}
 			}
 		}
-		return $this->_dir . ' (' . $status . ')';
+		$file1PathParts = array_slice( $file1PathParts, $countSameParts );
+		$file2PathParts = array_slice( $file2PathParts, $countSameParts );
+		$result = array();
+		if ( count( $file1PathParts ) > 1 )
+		{
+			for ( $i = 1, $c = count( $file1PathParts ); $i < $c; $i++ )
+			{
+				$result[] = '..';
+			}
+		}
+		for ( $i = 0, $c = count( $file2PathParts ); $i < $c; $i++ )
+		{
+			$result[] = $file2PathParts[ $i ];
+		}
+		return implode( DIRECTORY_SEPARATOR, $result );
 	}
 }

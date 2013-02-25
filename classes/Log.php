@@ -2,29 +2,29 @@
 /**
  * ClassMap
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @copyright (c) 2012, Dmitry Kuznetsov <kuznetsov2d@gmail.com>. All rights reserved.
- * @author Dmitry Kuznetsov <kuznetsov2d@gmail.com>
- * @url https://github.com/dmkuznetsov/php-class-map
-*/
-abstract class ClassMap_Log
+ * @link      http://github.com/dmkuznetsov/php-class-map
+ * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com> (http://dmkuznetsov.com)
+ * @license   http://raw.github.com/dmkuznetsov/php-class-map/master/LICENSE.txt New BSD License
+ */
+namespace ClassMap;
+
+class Log implements LogInterface
 {
 	/**
 	 * @var bool
 	 */
 	protected $_verboseMode;
+	private $_data = array();
+
+	private $_status = false;
+	private $_count;
+	private $_state = 0;
+	const MIN_FOR_RULE = 25;
+
+	public function __construct( $verbose = true )
+	{
+		$this->_verboseMode = $verbose;
+	}
 
 	/**
 	 * (PHP 4, PHP 5)<br/>
@@ -52,31 +52,92 @@ abstract class ClassMap_Log
 	 * @return string a string produced according to the formatting string
 	 * format.
 	 */
-	abstract public function log();
-
-	/**
-	 * @param string $name
-	 * @throws Exception
-	 * @return self
-	 */
-	public static function get( $name = 'None' )
+	public function log()
 	{
-		$files = glob( dirname( __FILE__ ) . '/Log/*.php' );
-		foreach ( $files as $filePath )
+		$date = date( 'H:i:s' );
+		$message = $date . ' ' . call_user_func_array( 'sprintf', func_get_args() );
+		$this->_data[] = $message;
+		if ( $this->_verboseMode )
 		{
-			$fileName = pathinfo( $filePath, PATHINFO_FILENAME );
-			if ( strcasecmp( $name, $fileName ) == 0 )
-			{
-				$className = sprintf( 'ClassMap_Log_%s', $name );
-				require $filePath;
-				return new $className();
-			}
+			echo "\n" . $message;
 		}
-		throw new Exception( 'Not found ClassMap_Log_' . $name );
 	}
 
-	public function setVerbose( $verbose )
+	public function getLog()
 	{
-		$this->_verboseMode = $verbose ? true : false;
+		return $this->_data;
+	}
+
+	public function startProgress( $count = null )
+	{
+		if ( !is_null( $count ) && $count >= self::MIN_FOR_RULE )
+		{
+			$this->_showRule();
+		}
+		$this->_status = true;
+		$this->_count = $count;
+		$this->_state = 0;
+	}
+
+	public function updateProgress( $number = 0 )
+	{
+		if ( is_null( $this->_count ) )
+		{
+			$this->_updateUnlimited();
+		}
+		else
+		{
+			$this->_updateLimited( $number );
+		}
+	}
+
+	public function stopProgress()
+	{
+		$this->_status = false;
+		$this->_state = 0;
+	}
+
+	private function _updateUnlimited()
+	{
+		list( $micro, ) = explode( ' ', microtime() );
+		$micro *= 100;
+		if ( !$this->_state || $micro > $this->_state + 5 )
+		{
+			$this->_state = $micro;
+			echo ".";
+		}
+	}
+
+	private function _updateLimited( $number )
+	{
+		if ( $this->_count >= self::MIN_FOR_RULE )
+		{
+			$percent = (int) ($number * 100 / $this->_count );
+			if ( $percent % 2 && $percent >= $this->_state + 2 )
+			{
+				$this->_state = $percent;
+				echo "=";
+			}
+		}
+	}
+
+	private function _showRule()
+	{
+		$length = 50;
+		$hint = "100%";
+		$content = "\n[";
+		for ( $i = 0, $c = $length - strlen( $hint ); $i < $c; $i++ )
+		{
+			if ( $i == $c / 2 - strlen( $hint ) / 2 )
+			{
+				$content .= $hint;
+			}
+			else
+			{
+				$content .= "-";
+			}
+		}
+		$content .= "]\n ";
+		echo $content;
 	}
 }
