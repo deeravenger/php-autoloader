@@ -5,7 +5,7 @@ Support PHP 5.3 (namespace required).
 
 USAGE
 -------------
-Just download [map.phar](https://github.com/downloads/dmkuznetsov/php-class-map/map.phar) (from downloads)
+Just download [map.phar](http://dmkuznetsov.com/shared/map.phar)
 and run next command in terminal:
 
 `php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files`
@@ -17,6 +17,10 @@ Script will create file "/path/to/file_for_autoload.php" with autoloader. Just i
 include '/path/to/file_for_autoload.php';
 ```
 
+By default, script will generate absolute paths. If you need relative paths - use next command:
+
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --relative-path`
+
 
 
 PHP CLASS MAP AUTOLOADER [ru]
@@ -26,7 +30,7 @@ PHP CLASS MAP AUTOLOADER [ru]
 
 КАК ПОЛЬЗОВАТЬСЯ
 ----------------
-Скачайте [map.phar](https://github.com/downloads/dmkuznetsov/php-class-map/map.phar) (из раздела downloads)
+Скачайте [map.phar](http://dmkuznetsov.com/shared/map.phar)
 и выполните команду в консоли:
 
 `php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file`
@@ -37,4 +41,8 @@ PHP CLASS MAP AUTOLOADER [ru]
 <?php
 include '/path/to/file_for_autoload.php';
 ```
+
+По-умолчанию, скрипт записывает абсолютные пути. Если вам нужно, чтобы были сгенерированы относительные пути - используйте команду:
+
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --relative-path`
 
