@@ -2,9 +2,9 @@
 /**
  * ClassMap
  *
- * @link      http://github.com/dmkuznetsov/php-class-map
+ * @link      http://github.com/dmkuznetsov/php-autoloader
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com> (http://dmkuznetsov.com)
- * @license   http://raw.github.com/dmkuznetsov/php-class-map/master/LICENSE.txt New BSD License
+ * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
 namespace ClassMap;
 
