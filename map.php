@@ -1,12 +1,12 @@
 <?php
 /**
- * ClassMap
+ * Universal php auto loader
  *
  * @link      http://github.com/dmkuznetsov/php-autoloader
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace ClassMap;
+namespace UniversalAutoloader;
 
 require_once dirname( __FILE__ ) . '/classes/LogInterface.php';
 require_once dirname( __FILE__ ) . '/classes/Log.php';
@@ -23,10 +23,10 @@ checkOptions( $options );
 $verbose = !array_key_exists( 'no-verbose', $options );
 $relative = array_key_exists( 'relative-path', $options );
 
-$log = new \ClassMap\Log( $verbose );
+$log = new \UniversalAutoloader\Log( $verbose );
 $log->log( "Start ClassMap generator" );
 
-$info = new \ClassMap\Info( $log );
+$info = new \UniversalAutoloader\Info( $log );
 $status = $info->checkFileStatus( $options[ 'file' ] );
 if ( $status )
 {
@@ -37,7 +37,7 @@ if ( !$status )
 	exit( "\nCanceled.\n" );
 }
 
-$classMap = new \ClassMap\Main( $options[ 'file' ], $options[ 'dir' ], $relative, $log );
+$classMap = new \UniversalAutoloader\Main( $options[ 'file' ], $options[ 'dir' ], $relative, $log );
 $classMap->run();
 $classMap->save();
 

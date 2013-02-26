@@ -1,12 +1,12 @@
 <?php
 /**
- * ClassMap
+ * Universal php auto loader
  *
  * @link      http://github.com/dmkuznetsov/php-autoloader
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace ClassMap;
+namespace UniversalAutoloader;
 
 if ( !defined( 'T_ML_COMMENT' ) )
 {
@@ -32,7 +32,7 @@ class Main
 	 */
 	protected $_relativePaths = true;
 	/**
-	 * @var \ClassMap\Log
+	 * @var \UniversalAutoloader\Log
 	 */
 	protected $_log;
 
@@ -57,7 +57,7 @@ class Main
 	 * @param string $file file with autoloader
 	 * @param string $dir where search classes
 	 * @param string $relative relative paths
-	 * @param \ClassMap\LogInterface $log
+	 * @param \UniversalAutoloader\LogInterface $log
 	 */
 	public function __construct( $file, $dir, $relative, LogInterface $log )
 	{
@@ -86,6 +86,9 @@ class Main
 		return $this->_classMap;
 	}
 
+	/**
+	 * @param string $file
+	 */
 	public function save( $file = '' )
 	{
 		if ( empty( $file ) )

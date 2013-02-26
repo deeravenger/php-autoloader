@@ -1,12 +1,12 @@
 <?php
 /**
- * ClassMap
+ * Universal php auto loader
  *
  * @link      http://github.com/dmkuznetsov/php-autoloader
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace ClassMap;
+namespace UniversalAutoloader;
 
 class Log implements LogInterface
 {
