@@ -14,43 +14,35 @@ class Log implements LogInterface
 	 * @var bool
 	 */
 	protected $_verboseMode;
+	/**
+	 * @var array
+	 */
 	private $_data = array();
+	/**
+	 * @var bool
+	 */
+	private $_progressStatus = false;
+	/**
+	 * @var
+	 */
+	private $_progressCount;
+	/**
+	 * @var int
+	 */
+	private $_progressState = 0;
 
-	private $_status = false;
-	private $_count;
-	private $_state = 0;
 	const MIN_FOR_RULE = 25;
 
+	/**
+	 * @param bool $verbose
+	 */
 	public function __construct( $verbose = true )
 	{
 		$this->_verboseMode = $verbose;
 	}
 
 	/**
-	 * (PHP 4, PHP 5)<br/>
-	 * Return a formatted string
-	 * @link http://php.net/manual/en/function.sprintf.php
-	 * @param string $format <p>
-	 * The format string is composed of zero or more directives:
-	 * ordinary characters (excluding %) that are
-	 * copied directly to the result, and conversion
-	 * specifications, each of which results in fetching its
-	 * own parameter. This applies to both sprintf
-	 * and printf.
-	 * </p>
-	 * <p>
-	 * Each conversion specification consists of a percent sign
-	 * (%), followed by one or more of these
-	 * elements, in order:
-	 * An optional sign specifier that forces a sign
-	 * (- or +) to be used on a number. By default, only the - sign is used
-	 * on a number if it's negative. This specifier forces positive numbers
-	 * to have the + sign attached as well, and was added in PHP 4.3.0.
-	 * @param mixed $args [optional] <p>
-	 * </p>
-	 * @param mixed $_ [optional]
-	 * @return string a string produced according to the formatting string
-	 * format.
+	 * @return string|void
 	 */
 	public function log()
 	{
@@ -63,25 +55,37 @@ class Log implements LogInterface
 		}
 	}
 
+	/**
+	 * Return all logged data
+	 * @return array
+	 */
 	public function getLog()
 	{
 		return $this->_data;
 	}
 
+	/**
+	 * @param null $count
+	 * @return mixed|void
+	 */
 	public function startProgress( $count = null )
 	{
 		if ( !is_null( $count ) && $count >= self::MIN_FOR_RULE )
 		{
 			$this->_showRule();
 		}
-		$this->_status = true;
-		$this->_count = $count;
-		$this->_state = 0;
+		$this->_progressStatus = true;
+		$this->_progressCount = $count;
+		$this->_progressState = 0;
 	}
 
+	/**
+	 * @param int $number
+	 * @return mixed|void
+	 */
 	public function updateProgress( $number = 0 )
 	{
-		if ( is_null( $this->_count ) )
+		if ( is_null( $this->_progressCount ) )
 		{
 			$this->_updateUnlimited();
 		}
@@ -91,31 +95,34 @@ class Log implements LogInterface
 		}
 	}
 
+	/**
+	 * @return void
+	 */
 	public function stopProgress()
 	{
-		$this->_status = false;
-		$this->_state = 0;
+		$this->_progressStatus = false;
+		$this->_progressState = 0;
 	}
 
 	private function _updateUnlimited()
 	{
 		list( $micro, ) = explode( ' ', microtime() );
 		$micro *= 100;
-		if ( !$this->_state || $micro > $this->_state + 5 )
+		if ( !$this->_progressState || $micro > $this->_progressState + 5 )
 		{
-			$this->_state = $micro;
+			$this->_progressState = $micro;
 			echo ".";
 		}
 	}
 
 	private function _updateLimited( $number )
 	{
-		if ( $this->_count >= self::MIN_FOR_RULE )
+		if ( $this->_progressCount >= self::MIN_FOR_RULE )
 		{
-			$percent = (int) ($number * 100 / $this->_count );
-			if ( $percent % 2 && $percent >= $this->_state + 2 )
+			$percent = (int) ($number * 100 / $this->_progressCount );
+			if ( $percent % 2 && $percent >= $this->_progressState + 2 )
 			{
-				$this->_state = $percent;
+				$this->_progressState = $percent;
 				echo "=";
 			}
 		}

@@ -44,6 +44,10 @@ class Info
 		return $status;
 	}
 
+	/**
+	 * @param $dir
+	 * @return array
+	 */
 	private function _getDirWithStatus( $dir )
 	{
 		$result = false;
@@ -60,6 +64,10 @@ class Info
 		return array( $result, $dir . ' (' . $status . ')' );
 	}
 
+	/**
+	 * @param $file
+	 * @return array
+	 */
 	private function _getFileStatus( $file )
 	{
 		$result = false;

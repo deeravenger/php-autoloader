@@ -211,6 +211,10 @@ class Main
 		return $result;
 	}
 
+	/**
+	 * @param string $file
+	 * @return bool
+	 */
 	protected function _writeToFile( $file )
 	{
 		$content = file_get_contents( dirname( __FILE__ ) . '/../autoload.php' );
@@ -219,9 +223,14 @@ class Main
 		return $bytes ? true : false;
 	}
 
-	protected function _getRelativePath( $autoloader, $file )
+	/**
+	 * @param string $autoloaderPath path for generated autoloader
+	 * @param string $file path to analyzed file
+	 * @return string
+	 */
+	protected function _getRelativePath( $autoloaderPath, $file )
 	{
-		$file1PathParts = explode( DIRECTORY_SEPARATOR, $autoloader );
+		$file1PathParts = explode( DIRECTORY_SEPARATOR, $autoloaderPath );
 		$file2PathParts = explode( DIRECTORY_SEPARATOR, $file );
 		$countSameParts = 0;
 		for ( $i = 0, $c = count( $file1PathParts ); $i < $c; $i++ )
