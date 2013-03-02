@@ -10,7 +10,7 @@ function __universal_autoloader( $className )
 {
 	$map = array();
 	$className = str_replace( '\\', '/', $className );
-	if ( !class_exists( $className ) && isset( $map[ $className ] ) )
+	if ( !class_exists( $className, false ) && isset( $map[ $className ] ) )
 	{
 		include $map[ $className ];
 	}
