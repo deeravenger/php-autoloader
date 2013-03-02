@@ -53,6 +53,8 @@ class Main
 	 */
 	private $_classMapCount = 0;
 
+	const AUTOLOADER_NAME = '__universal_autoloader';
+
 	/**
 	 * @param string $file file with autoloader
 	 * @param string $dir where search classes
@@ -221,6 +223,8 @@ class Main
 	protected function _writeToFile( $file )
 	{
 		$content = file_get_contents( dirname( __FILE__ ) . '/../autoload.php' );
+		$content = str_replace( self::AUTOLOADER_NAME, self::AUTOLOADER_NAME . rand( 100, 999 ), $content );
+		$content = str_replace( '@date', '@date ' . date( 'Y-m-d H:i' ), $content );
 		$content = str_replace( 'array()', var_export( $this->_classMap, true ), $content );
 		$bytes = file_put_contents( $file, $content );
 		return $bytes ? true : false;
