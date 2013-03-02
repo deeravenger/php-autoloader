@@ -44,6 +44,8 @@ Class MainTest extends PHPUnit_Framework_TestCase
 				'Bar/TestInterface' => 'first.php',
 				'EmptyClass' => 'first.php',
 				'OtherFileClass' => 'four.php',
+				'One/Two/Three/FourClass' => 'five.php',
+				'CheckUse/FiveClass' => 'five.php',
 			)
 		);
 		$data[] = array(
@@ -59,6 +61,8 @@ Class MainTest extends PHPUnit_Framework_TestCase
 				'Bar/TestInterface' => '../source/first.php',
 				'EmptyClass' => '../source/first.php',
 				'OtherFileClass' => '../source/four.php',
+				'One/Two/Three/FourClass' => '../source/five.php',
+				'CheckUse/FiveClass' => '../source/five.php',
 			)
 		);
 		$data[] = array(
@@ -74,6 +78,8 @@ Class MainTest extends PHPUnit_Framework_TestCase
 				'Bar/TestInterface' => dirname( __FILE__ ) . '/source/first.php',
 				'EmptyClass' => dirname( __FILE__ ) . '/source/first.php',
 				'OtherFileClass' => dirname( __FILE__ ) . '/source/four.php',
+				'One/Two/Three/FourClass' => dirname( __FILE__ ) . '/source/five.php',
+				'CheckUse/FiveClass' => dirname( __FILE__ ) . '/source/five.php',
 			)
 		);
 

@@ -141,7 +141,7 @@ class Main
 			$this->_log->updateProgress( $i );
 		}
 		$this->_log->stopProgress();
-//		ksort( $this->_classMap );
+		ksort( $this->_classMap );
 	}
 
 	/**
@@ -171,7 +171,8 @@ class Main
 		$tokens = token_get_all( $content );
 		$waitingClassName = false;
 		$waitingNamespace = false;
-		$namespace = '';
+		$waitingNamespaceSeparator = false;
+		$namespace = array();
 		for ( $i = 0, $c = count( $tokens ); $i < $c; $i++ )
 		{
 			if ( is_array( $tokens[ $i ] ) )
@@ -181,7 +182,8 @@ class Main
 				{
 					case T_NAMESPACE:
 						$waitingNamespace = true;
-						$namespace = '';
+						$waitingNamespaceSeparator = false;
+						$namespace = array();
 						break;
 					case T_CLASS:
 					case T_INTERFACE:
@@ -190,26 +192,35 @@ class Main
 					case T_STRING:
 						if ( $waitingNamespace )
 						{
-							$namespace = $value;
+							$namespace[] = $value;
 							$waitingNamespace = false;
+							$waitingNamespaceSeparator = true;
 						}
 						elseif ( $waitingClassName )
 						{
 							if ( !empty( $namespace ) )
 							{
-								$value = sprintf( '%s/%s', $namespace, $value );
+								$value = sprintf( '%s/%s', implode( '/', $namespace ), $value );
 							}
 							$result[ ] = $value;
 							$waitingClassName = false;
+						}
+						break;
+					case T_NS_SEPARATOR:
+						if ( $waitingNamespaceSeparator && !$waitingNamespace && !empty( $namespace ) )
+						{
+							$waitingNamespace = true;
+							$waitingNamespaceSeparator = false;
 						}
 						break;
 				}
 			}
 			else
 			{
-				if ( $waitingNamespace && $tokens[ $i ] == '{' )
+				if ( ( $waitingNamespace || $waitingNamespaceSeparator ) && ( $tokens[ $i ] == '{' || $tokens[ $i ] == ';' ) )
 				{
 					$waitingNamespace = false;
+					$waitingNamespaceSeparator = false;
 				}
 			}
 		}
