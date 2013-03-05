@@ -6,8 +6,6 @@
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace UniversalAutoloader;
-
 require_once dirname( __FILE__ ) . '/classes/LogInterface.php';
 require_once dirname( __FILE__ ) . '/classes/Log.php';
 require_once dirname( __FILE__ ) . '/classes/Info.php';
@@ -23,10 +21,10 @@ checkOptions( $options );
 $verbose = !array_key_exists( 'no-verbose', $options );
 $relative = array_key_exists( 'relative-path', $options );
 
-$log = new \UniversalAutoloader\Log( $verbose );
+$log = new \Dm\Utils\Autoload\Log( $verbose );
 $log->log( "Start ClassMap generator" );
 
-$info = new \UniversalAutoloader\Info( $log );
+$info = new \Dm\Utils\Autoload\Info( $log );
 $status = $info->checkFileStatus( $options[ 'file' ] );
 if ( $status )
 {
@@ -37,7 +35,7 @@ if ( !$status )
 	exit( "\nCanceled.\n" );
 }
 
-$classMap = new \UniversalAutoloader\Main( $options[ 'file' ], $options[ 'dir' ], $relative, $log );
+$classMap = new \Dm\Utils\Autoload\Main( $options[ 'file' ], $options[ 'dir' ], $relative, $log );
 $classMap->run();
 $classMap->save();
 

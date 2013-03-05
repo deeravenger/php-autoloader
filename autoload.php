@@ -6,7 +6,7 @@
  * @license http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  * @date
  */
-function __universal_autoloader( $className )
+function __dm_autoload( $className )
 {
 	$map = array();
 	$className = str_replace( '\\', '/', $className );
@@ -15,4 +15,4 @@ function __universal_autoloader( $className )
 		include $map[ $className ];
 	}
 }
-spl_autoload_register( '__universal_autoloader' );
+spl_autoload_register( '__dm_autoload' );

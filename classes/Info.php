@@ -6,12 +6,12 @@
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace UniversalAutoloader;
+namespace Dm\Utils\Autoload;
 
 class Info
 {
 	/**
-	 * @var \UniversalAutoloader\Log
+	 * @var Log
 	 */
 	protected $_log;
 

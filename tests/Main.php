@@ -8,7 +8,7 @@ Class MainTest extends PHPUnit_Framework_TestCase
 	private $_log;
 	public function setUp()
 	{
-		$this->_log = new \UniversalAutoloader\Log( false );
+		$this->_log = new \Dm\Utils\Autoload\Log( false );
 	}
 
 	/**
@@ -20,7 +20,7 @@ Class MainTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetMap( $file, $dir, $useRelativePath, $expected )
 	{
-		$classMap = new \UniversalAutoloader\Main( $file, $dir, $useRelativePath, $this->_log );
+		$classMap = new \Dm\Utils\Autoload\Main( $file, $dir, $useRelativePath, $this->_log );
 		$classMap->run();
 		$classMap->getMap();
 

@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-namespace UniversalAutoloader;
+namespace Dm\Utils\Autoload;
 
 if ( !defined( 'T_ML_COMMENT' ) )
 {
@@ -32,7 +32,7 @@ class Main
 	 */
 	protected $_relativePaths = true;
 	/**
-	 * @var \UniversalAutoloader\Log
+	 * @var Log
 	 */
 	protected $_log;
 
@@ -53,13 +53,13 @@ class Main
 	 */
 	private $_classMapCount = 0;
 
-	const AUTOLOADER_NAME = '__universal_autoloader';
+	const AUTOLOAD_NAME = '__dm_autoload';
 
 	/**
 	 * @param string $file file with autoloader
 	 * @param string $dir where search classes
 	 * @param string $relative relative paths
-	 * @param \UniversalAutoloader\LogInterface $log
+	 * @param LogInterface $log
 	 */
 	public function __construct( $file, $dir, $relative, LogInterface $log )
 	{
@@ -234,7 +234,7 @@ class Main
 	protected function _writeToFile( $file )
 	{
 		$content = file_get_contents( dirname( __FILE__ ) . '/../autoload.php' );
-		$content = str_replace( self::AUTOLOADER_NAME, self::AUTOLOADER_NAME . rand( 100, 999 ), $content );
+		$content = str_replace( self::AUTOLOAD_NAME, self::AUTOLOAD_NAME . rand( 100, 999 ), $content );
 		$content = str_replace( '@date', '@date ' . date( 'Y-m-d H:i' ), $content );
 		$content = str_replace( 'array()', var_export( $this->_classMap, true ), $content );
 		$bytes = file_put_contents( $file, $content );
