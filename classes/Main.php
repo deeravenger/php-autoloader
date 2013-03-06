@@ -32,6 +32,10 @@ class Main
 	 */
 	protected $_relativePaths = true;
 	/**
+	 * @var string
+	 */
+	protected $_suffix;
+	/**
 	 * @var Log
 	 */
 	protected $_log;
@@ -58,15 +62,17 @@ class Main
 	/**
 	 * @param string $file file with autoloader
 	 * @param string $dir where search classes
+	 * @param string $suffix Suffix for name of autoload function
 	 * @param string $relative relative paths
 	 * @param LogInterface $log
 	 */
-	public function __construct( $file, $dir, $relative, LogInterface $log )
+	public function __construct( $file, $dir, $suffix, $relative, LogInterface $log )
 	{
 		$this->_filePath = $file;
 		$this->_dir = rtrim( $dir, '/' );
 		$this->_log = $log;
 		$this->_relativePaths = $relative;
+		$this->_suffix = ltrim( (string)$suffix, '_' );
 	}
 
 	public function run()
@@ -234,7 +240,7 @@ class Main
 	protected function _writeToFile( $file )
 	{
 		$content = file_get_contents( dirname( __FILE__ ) . '/../autoload.php' );
-		$content = str_replace( self::AUTOLOAD_NAME, self::AUTOLOAD_NAME . rand( 100, 999 ), $content );
+		$content = str_replace( self::AUTOLOAD_NAME, self::AUTOLOAD_NAME . '_' . $this->_suffix, $content );
 		$content = str_replace( '@date', '@date ' . date( 'Y-m-d H:i' ), $content );
 		$content = str_replace( 'array()', var_export( $this->_classMap, true ), $content );
 		$bytes = file_put_contents( $file, $content );

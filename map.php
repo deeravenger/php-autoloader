@@ -11,7 +11,7 @@ require_once dirname( __FILE__ ) . '/classes/Log.php';
 require_once dirname( __FILE__ ) . '/classes/Info.php';
 require_once dirname( __FILE__ ) . '/classes/Main.php';
 
-$options = getopt( '', array( 'dir:', 'file:', 'relative-path', 'no-verbose', 'help' ) );
+$options = getopt( '', array( 'dir:', 'file:', 'suffix:', 'absolute-path', 'no-verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
 {
 	help();
@@ -19,7 +19,8 @@ if ( array_key_exists( 'help', $options ) )
 checkOptions( $options );
 
 $verbose = !array_key_exists( 'no-verbose', $options );
-$relative = array_key_exists( 'relative-path', $options );
+$relative = !array_key_exists( 'absolute-path', $options );
+$options[ 'suffix' ] = isset( $options[ 'suffix' ] ) && !empty( $options[ 'suffix' ] ) ? $options[ 'suffix' ] : rand( 100, 999 );
 
 $log = new \Dm\Utils\Autoload\Log( $verbose );
 $log->log( "Start ClassMap generator" );
@@ -35,7 +36,7 @@ if ( !$status )
 	exit( "\nCanceled.\n" );
 }
 
-$classMap = new \Dm\Utils\Autoload\Main( $options[ 'file' ], $options[ 'dir' ], $relative, $log );
+$classMap = new \Dm\Utils\Autoload\Main( $options[ 'file' ], $options[ 'dir' ], $options[ 'suffix' ], $relative, $log );
 $classMap->run();
 $classMap->save();
 
@@ -72,9 +73,10 @@ function help()
 	$content[] = 'If you use phar file write "php map.phar"';
 	$content[] = 'If you use php file write "php map.php"';
 	$content[] = 'AVAILABLE OPTIONS';
-	$content[] = '--file="path/to/your/autoloader.php"';
+	$content[] = '--file="path/to/your/autoload.php"';
 	$content[] = '--dir="path/to/your/php/classes"';
-	$content[] = '--relative-path';
+	$content[] = '--suffix="suffix of autoload function"';
+	$content[] = '--absolute-path';
 	$content[] = '--no-verbose';
 	$content[] = '--help';
 	$content[] = '';

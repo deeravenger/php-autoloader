@@ -17,9 +17,9 @@ Script will create file "/path/to/file_for_autoload.php" with autoloader. Just i
 include '/path/to/file_for_autoload.php';
 ```
 
-By default, script will generate absolute paths. If you need relative paths - use next command:
+By default, script will generate relative paths. If you need absolute paths - use next command:
 
-`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --relative-path`
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --absolute-path`
 
 
 
@@ -42,7 +42,7 @@ PHP CLASS MAP AUTOLOADER [ru]
 include '/path/to/file_for_autoload.php';
 ```
 
-По-умолчанию, скрипт записывает абсолютные пути. Если вам нужно, чтобы были сгенерированы относительные пути - используйте команду:
+По-умолчанию, скрипт записывает относительные пути. Если вам нужно, чтобы были сгенерированы абсолютные пути - используйте команду:
 
-`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --relative-path`
+`php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file --absolute-path`
 
