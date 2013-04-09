@@ -9,7 +9,6 @@
 function __dm_autoload( $className )
 {
 	$map = array();
-	$className = str_replace( '\\', '/', $className );
 	if ( !class_exists( $className, false ) && isset( $map[ $className ] ) )
 	{
 		include $map[ $className ];

@@ -6,10 +6,10 @@
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
  * @license   http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  */
-require_once dirname( __FILE__ ) . '/classes/LogInterface.php';
-require_once dirname( __FILE__ ) . '/classes/Log.php';
-require_once dirname( __FILE__ ) . '/classes/Info.php';
-require_once dirname( __FILE__ ) . '/classes/Main.php';
+require_once dirname(__FILE__) . '/src/Autoload/LogInterface.php';
+require_once dirname(__FILE__) . '/src/Autoload/Log.php';
+require_once dirname(__FILE__) . '/src/Autoload/Info.php';
+require_once dirname( __FILE__ ) . '/src/Autoload.php';
 
 $options = getopt( '', array( 'dir:', 'file:', 'suffix:', 'absolute-path', 'no-verbose', 'help' ) );
 if ( array_key_exists( 'help', $options ) )
@@ -36,7 +36,7 @@ if ( !$status )
 	exit( "\nCanceled.\n" );
 }
 
-$classMap = new \Dm\Utils\Autoload\Main( $options[ 'file' ], $options[ 'dir' ], $options[ 'suffix' ], $relative, $log );
+$classMap = new \Dm\Utils\Autoload( $options[ 'file' ], $options[ 'dir' ], $options[ 'suffix' ], $relative, $log );
 $classMap->run();
 $classMap->save();
 
