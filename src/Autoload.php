@@ -9,12 +9,6 @@
 namespace Dm\Utils;
 use Dm\Utils\Autoload\LogInterface as LogInterface;
 
-if (!defined('T_ML_COMMENT')) {
-    define('T_ML_COMMENT', T_COMMENT);
-} else {
-    define('T_DOC_COMMENT', T_ML_COMMENT);
-}
-
 class Autoload
 {
     /**
