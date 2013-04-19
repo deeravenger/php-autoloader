@@ -166,6 +166,12 @@ class Autoload
             if (is_array($tokens[$i])) {
                 list($id, $value) = $tokens[$i];
                 switch ($id) {
+                    case T_TRAIT:
+                        $waitingNamespace = false;
+                        $waitingNamespaceSeparator = false;
+                        $waitingClassName = true;
+                        $namespace = '';
+                        break;
                     case T_NAMESPACE:
                         $waitingNamespace = true;
                         $waitingNamespaceSeparator = false;
