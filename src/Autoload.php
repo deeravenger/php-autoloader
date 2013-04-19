@@ -170,7 +170,7 @@ class Autoload
                         $waitingNamespace = false;
                         $waitingNamespaceSeparator = false;
                         $waitingClassName = true;
-                        $namespace = '';
+                        $namespace = array();
                         break;
                     case T_NAMESPACE:
                         $waitingNamespace = true;
