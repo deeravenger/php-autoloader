@@ -6,12 +6,12 @@
  * @license http://raw.github.com/dmkuznetsov/php-autoloader/master/LICENSE.txt New BSD License
  * @date
  */
-function __dm_autoload( $className )
+function __dm_autoload( $name )
 {
 	$map = array();
-	if ( !class_exists( $className, false ) && isset( $map[ $className ] ) )
+	if ( isset( $map[ $name ] ) )
 	{
-		include $map[ $className ];
+		require $map[ $name ];
 	}
 }
 spl_autoload_register( '__dm_autoload' );
