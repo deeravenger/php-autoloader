@@ -1,6 +1,6 @@
 <?php
 /**
- * Universal php auto loader
+ * Autoload generator
  *
  * @link      http://github.com/dmkuznetsov/php-autoloader
  * @copyright Copyright (c) 2012-2013 Dmitry Kuznetsov <kuznetsov2d@gmail.com>
