@@ -73,9 +73,9 @@ class Autoload
         $this->_searchFiles();
         $this->_log->log("Found %d php-files", $this->_filesCount);
 
-        $this->_log->log("Start analyzing files for classes...");
+        $this->_log->log("Start analyzing files for classes, interfaces, traits...");
         $this->_buildClassMap();
-        $this->_log->log("Found %d classes", $this->_classMapCount);
+        $this->_log->log("Found %d items", $this->_classMapCount);
     }
 
     /**
@@ -94,10 +94,7 @@ class Autoload
         if (empty($file)) {
             $file = $this->_filePath;
         }
-        $this->_log->log("Start writing class map to file...");
-        if ($this->_relativePaths) {
-            $this->_log->log("Use relative paths");
-        }
+        $this->_log->log("Start writing autoloder to file...");
         $success = $this->_writeToFile($file);
         if ($success) {
             $this->_log->log("Success! Please, check file %s", $file);

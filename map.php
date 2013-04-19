@@ -23,7 +23,7 @@ $relative = !array_key_exists( 'absolute-path', $options );
 $options[ 'suffix' ] = isset( $options[ 'suffix' ] ) && !empty( $options[ 'suffix' ] ) ? $options[ 'suffix' ] : rand( 100, 999 );
 
 $log = new \Dm\Utils\Autoload\Log( $verbose );
-$log->log( "Start ClassMap generator" );
+$log->log( "Start autoload generator" );
 
 $info = new \Dm\Utils\Autoload\Info( $log );
 $status = $info->checkFileStatus( $options[ 'file' ] );
@@ -34,6 +34,12 @@ if ( $status )
 if ( !$status )
 {
 	exit( "\nCanceled.\n" );
+}
+
+if ($relative) {
+    $log->log("Use relative paths");
+} else {
+    $log->log("Use absolute paths");
 }
 
 $classMap = new \Dm\Utils\Autoload( $options[ 'file' ], $options[ 'dir' ], $options[ 'suffix' ], $relative, $log );
@@ -67,21 +73,27 @@ function checkOptions( array $options )
 function help()
 {
 	$content = array();
-	$content[] = 'PHP CLASS MAP';
-	$content[] = 'Script for generation map of php files. Support PHP 5.3 (namespace required).';
+	$content[] = 'PHP AUTOLOAD GENERATOR';
+    $content[] = 'Script for generate universal autoloader.';
+    $content[] = 'Support classes, interfaces, namespaces, traits. (PHP >= 5.3 required).';
+    $content[] = '';
 	$content[] = 'USAGE';
 	$content[] = 'If you use phar file write "php map.phar"';
 	$content[] = 'If you use php file write "php map.php"';
-	$content[] = 'AVAILABLE OPTIONS';
-	$content[] = '--file="path/to/your/autoload.php"';
-	$content[] = '--dir="path/to/your/php/classes"';
-	$content[] = '--suffix="suffix of autoload function"';
-	$content[] = '--absolute-path';
-	$content[] = '--no-verbose';
-	$content[] = '--help';
-	$content[] = '';
-	$content[] = 'Dmitry Kuznetsov <kuznetsov2d@gmail.com>, 2012';
-	$content[] = 'https://github.com/dmkuznetsov/php-class-map';
+    $content[] = '';
+    $content[] = 'AVAILABLE OPTIONS';
+	$content[] = '--file             - path to your autoload.php';
+	$content[] = '--dir              - path to your php classes';
+	$content[] = '--suffix           - suffix for autoload function';
+	$content[] = '--absolute-path    - use absolute paths';
+	$content[] = '--no-verbose       - hide log';
+	$content[] = '--help             - show help';
+    $content[] = '';
+   	$content[] = 'EXAMPLE';
+   	$content[] = 'map.phar --file=/www/project/autoload.php --dir=/www/project/src --suffix="project_name"';
+   	$content[] = '';
+   	$content[] = 'Dmitry Kuznetsov <kuznetsov2d@gmail.com>, 2012-'.date('Y');
+   	$content[] = 'https://github.com/dmkuznetsov/php-autoloader';
 	showMessage( $content );
 }
 
