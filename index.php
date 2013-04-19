@@ -74,24 +74,20 @@ function help()
 {
 	$content = array();
 	$content[] = 'PHP AUTOLOAD GENERATOR';
-    $content[] = 'Script for generate universal autoloader.';
-    $content[] = 'Support classes, interfaces, namespaces, traits. (PHP >= 5.3 required).';
+    $content[] = 'Script for generate universal autoload.';
+    $content[] = 'Support classes, interfaces, namespaces, traits (PHP >= 5.3 required).';
     $content[] = '';
 	$content[] = 'USAGE';
-	$content[] = 'If you use phar file write "php map.phar"';
-	$content[] = 'If you use php file write "php map.php"';
+    $content[] = 'php autoload.phar --file=/www/project/autoload.php --dir=/www/project/src --suffix="project_name"';
     $content[] = '';
     $content[] = 'AVAILABLE OPTIONS';
 	$content[] = '--file             - path to your autoload.php';
-	$content[] = '--dir              - path to your php classes';
+	$content[] = '--dir              - path to your project';
 	$content[] = '--suffix           - suffix for autoload function';
 	$content[] = '--absolute-path    - use absolute paths';
 	$content[] = '--no-verbose       - hide log';
 	$content[] = '--help             - show help';
     $content[] = '';
-   	$content[] = 'EXAMPLE';
-   	$content[] = 'map.phar --file=/www/project/autoload.php --dir=/www/project/src --suffix="project_name"';
-   	$content[] = '';
    	$content[] = 'Dmitry Kuznetsov <kuznetsov2d@gmail.com>, 2012-'.date('Y');
    	$content[] = 'https://github.com/dmkuznetsov/php-autoloader';
 	showMessage( $content );
