@@ -10,7 +10,7 @@ PHP >= 5.3
 
 USAGE
 -------------
-Just download [map.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/autoload.phar)
+Just download [autoload.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/autoload.phar)
 and run next command in terminal:
 
 `php autoload.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files`
@@ -40,7 +40,7 @@ PHP >= 5.3
 
 КАК ПОЛЬЗОВАТЬСЯ
 ----------------
-Скачайте [map.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/autoload.phar)
+Скачайте [autoload.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/autoload.phar)
 и выполните команду в консоли:
 
 `php autoload.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file`
