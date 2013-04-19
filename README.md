@@ -1,11 +1,16 @@
 PHP CLASS MAP AUTOLOADER [en]
 =============================
 Script for generating autoloader based on the map of classes in your project.
-Support PHP 5.3 (namespace required).
+Support namespace, trait.
+
+REQUIREMENTS
+------------
+PHP >= 5.3
+
 
 USAGE
 -------------
-Just download [map.phar](http://dmkuznetsov.com/shared/map.phar)
+Just download [map.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/map.phar)
 and run next command in terminal:
 
 `php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/files`
@@ -26,11 +31,16 @@ By default, script will generate relative paths. If you need absolute paths - us
 PHP CLASS MAP AUTOLOADER [ru]
 =============================
 Скрипт для генерации автозагрузчика на основании карты классов вашего проекта.
-Поддерживает версию PHP 5.3 (включая namespace).
+Поддерживает неймспейсы и трейты.
+
+ТРЕБУЕТСЯ
+---------
+PHP >= 5.3
+
 
 КАК ПОЛЬЗОВАТЬСЯ
 ----------------
-Скачайте [map.phar](http://dmkuznetsov.com/shared/map.phar)
+Скачайте [map.phar](https://github.com/dmkuznetsov/php-autoloader/raw/master/bin/map.phar)
 и выполните команду в консоли:
 
 `php map.phar --file=/path/to/file_for_autoload.php --dir=/path/to/dir/where/php/file`
